@@ -90,6 +90,14 @@ async def upload_original_file(
     except Exception:
         return None
 
+@app.get("/")
+def root():
+    return {"service": "qr-code-v2", "status": "running"}
+
+@app.get("/health")
+def health():
+    return {"ok": True}
+
 @app.post("/api/qr/decode")
 async def decode_qr(image: UploadFile = File(...)):
     try:
