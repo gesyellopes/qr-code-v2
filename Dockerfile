@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir \
     pydantic-settings
 
 # Porta padrão (Coolify detecta)
-EXPOSE 8000
+EXPOSE 3500
 
 # Comando de start
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3500"]
