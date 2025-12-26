@@ -1,0 +1,7 @@
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+numpy==2.1.3
+opencv-python-headless==4.10.0.84
+zxing-cpp==2.3.0
+httpx==0.27.2
+pydantic-settings==2.6.1

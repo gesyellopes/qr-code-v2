@@ -1,38 +1,31 @@
-# Base enxuta e compatível com opencv
-FROM python:3.10-slim
+# Base image
+FROM python:3.11-slim
 
-# Evita prompts interativos
-ENV DEBIAN_FRONTEND=noninteractive
+# Define diretório de trabalho
+WORKDIR /app
 
-# Dependências do sistema (opencv + zxing)
+# Instala dependências do sistema (opencv + zbar)
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
     libzbar0 \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Diretório da app
-WORKDIR /app
-
-# Copia tudo
-COPY . /app
-
-# Atualiza pip
-RUN pip install --no-cache-dir --upgrade pip
+# Copia requirements primeiro (melhora cache)
+COPY requirements.txt .
 
 # Instala dependências Python
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn[standard] \
-    numpy \
-    opencv-python-headless \
-    zxing-cpp \
-    httpx \
-    pydantic-settings
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Porta padrão (Coolify detecta)
-EXPOSE 3500
+# Copia o código para o container
+COPY . .
 
-# Comando de start
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3500"]
+# Porta interna da API (uvicorn)
+EXPOSE 8000
+
+# Comando para rodar a API
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
